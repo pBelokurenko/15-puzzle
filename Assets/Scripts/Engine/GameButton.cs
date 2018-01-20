@@ -25,9 +25,9 @@ public class GameButton : SlideBehaviour
         }
     }
 
-    BoardManager controller;
     const float time = 0.25f;
     bool isCollisionEnabled = true;
+    BoardManager controller;
 
     float size
     {
@@ -43,8 +43,7 @@ public class GameButton : SlideBehaviour
         GetComponent<Image>().color = new Color(1, 1, 1, 1);
         GetComponent<Collider2D>().enabled = true;
         isEmptyCell = false;
-        if (HasAction())
-            onAnySlide += NotifyController;
+        onAnySlide.AddAction(NotifyController);
     }
 
     public void Deactivate()
@@ -61,19 +60,19 @@ public class GameButton : SlideBehaviour
         {
             case SLIDE_DIRECTION.TOP:
                 transform.DOKill(true);
-                transform.DOMoveY(transform.position.y + size, time);
+                transform.DOLocalMoveY(transform.localPosition.y + size, time);
                 break;
             case SLIDE_DIRECTION.DOWN:
                 transform.DOKill(true);
-                transform.DOMoveY(transform.position.y - size, time);
+                transform.DOLocalMoveY(transform.localPosition.y - size, time);
                 break;
             case SLIDE_DIRECTION.LEFT:
                 transform.DOKill(true);
-                transform.DOMoveX(transform.position.x - size, time);
+                transform.DOLocalMoveX(transform.localPosition.x - size, time);
                 break;
             case SLIDE_DIRECTION.RIGHT:
                 transform.DOKill(true);
-                transform.DOMoveX(transform.position.x + size, time);
+                transform.DOLocalMoveX(transform.localPosition.x + size, time);
                 break;
         }
     }

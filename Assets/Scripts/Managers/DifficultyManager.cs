@@ -103,24 +103,24 @@ public class DifficultyManager : Singleton<DifficultyManager>
         switch (currentDifficulty)
         {
             case DIFFICULTY.EASY:
-                initialPoint = new Vector3(-1.58f, 0.8f, 0);
-                fillStep = 1.58f;
+                initialPoint = new Vector3(-158f, 80f, 0);
+                fillStep = 158f;
                 CurrentFieldSize = 3;
-                scaleRate = 1.0f;
+                scaleRate = 100f;
                 winCondition = "12345678 ";
                 break;
             case DIFFICULTY.NORAML:
-                initialPoint = new Vector3(-1.76f, 0.77f, 0);
-                fillStep = 1.18f;
+                initialPoint = new Vector3(-176f, 77f, 0);
+                fillStep = 118f;
                 CurrentFieldSize = 4;
-                scaleRate = 0.75f;
+                scaleRate = 75f;
                 winCondition = "123456789101112131415 ";
                 break;
             case DIFFICULTY.HARD:
-                initialPoint = new Vector3(-1.87f, 0.75f, 0);
-                fillStep = 0.94f;
+                initialPoint = new Vector3(-187f, 75f, 0);
+                fillStep = 94f;
                 CurrentFieldSize = 5;
-                scaleRate = 0.6f;
+                scaleRate = 60f;
                 winCondition = "123456789101112131415161718192021222324 ";
                 break;
         }

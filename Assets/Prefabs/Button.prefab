@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114689699485568980}
   - component: {fileID: 61151385802966026}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 623766dfa3005df4aaeea237161668d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
   label: {fileID: 114090515266748760}
 --- !u!222 &222063682146618754
 CanvasRenderer:

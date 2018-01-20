@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class BoardManager : Singleton<BoardManager>
 {
-    public GameButton[] buttons { get; private set; }
+    public Panel gamePanel;
+
     public int buttonCount
     {
         get
@@ -40,6 +41,7 @@ public class BoardManager : Singleton<BoardManager>
         }
     }
     public int emptyButtonIndex { get; private set; }
+    public GameButton[] buttons { get; private set; }
 
     FieldGenerator<GameButton> fg;
     DIFFICULTY currentDiffculty, prevDifficulty;
@@ -51,31 +53,30 @@ public class BoardManager : Singleton<BoardManager>
         }
     }
 
+    bool isInstantiated;
+
     protected override void SingletonStarted()
     {
         buttons = new GameButton[25];
-        InstantiateButtons();
         DifficultyManager.Instance.onDifficultyChanges += ChangeScale;
         DifficultyManager.Instance.onDifficultyChanges += FillField;
         prevDifficulty = currentDiffculty = DifficultyManager.Instance.CurrentDifficulty;
     }
 
-    void InstantiateButtons()
+    public void InstantiateButtons()
     {
-        for (int i = 0; i < buttons.Length; i++)
+        if (!isInstantiated)
         {
-            buttons[i] = Instantiate((GameObject)CurrentPrefab, ((GamePanel)GameManager.Instance.gamePanel).game.transform).GetComponent<GameButton>();
-            buttons[i].name = "Button" + i;
-            buttons[i].transform.position = new Vector3(15, 0, 0);
-            buttons[i].transform.DOScale(new Vector3(scaleRate, scaleRate, 1), 0f);
-            if (i != 0)
+            for (int i = 0; i < buttons.Length; i++)
             {
-                buttons[i].label.text = i.ToString();
-                buttons[i].IsCollisionEnabled = true;
+                buttons[i] = Instantiate((GameObject)CurrentPrefab, gamePanel.transform).GetComponent<GameButton>();
+                buttons[i].name = "Button" + i;
+                buttons[i].transform.position = new Vector3(150, 0, 0);
+                buttons[i].transform.DOScale(new Vector3(scaleRate, scaleRate, 1), 0f);
+                if (i != 0)
+                    buttons[i].label.text = i.ToString();
+                buttons[i].SetIndex(i);
             }
-            else
-                buttons[i].IsCollisionEnabled = false;
-            buttons[i].SetIndex(i);
         }
     }
 
@@ -193,109 +194,6 @@ public class BoardManager : Singleton<BoardManager>
         for (int i = 0; i < indexes.Length; i++)
             indexes[i] = -1;
 
-        #region
-        switch (dir)
-        {
-            //    case SLIDE_DIRECTION.TOP:
-            //        for (int i = button.index; i >= 0; i -= fieldSize)
-            //        {
-            //            if (i - fieldSize < 0 && (i != 0 && !buttons[i].isEmptyCell))
-            //                return;
-            //            else if (!buttons[i].isEmptyCell)
-            //                indexes[currentIndex++] = buttons[i].index;
-            //            if (buttons[i].isEmptyCell)
-            //            {
-            //                GameButton temp = buttons[emptyButtonIndex];
-            //                for (int j = indexes.Length - 1; j >= 0; j--)
-            //                    if (indexes[j] >= 0)
-            //                    {
-            //                        buttons[indexes[j] - fieldSize] = buttons[indexes[j]];
-            //                        buttons[indexes[j] - fieldSize].index = indexes[j] - fieldSize;
-            //                        buttons[indexes[j]].Move(dir);
-            //                    }
-            //                if (indexes[0] >= 0)
-            //                    buttons[indexes[0]] = temp;
-            //                emptyButtonIndex = temp.index = indexes[0];
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    case SLIDE_DIRECTION.DOWN:
-            //        for (int i = button.index; i < buttonCount; i += fieldSize)
-            //        {
-            //            if (i + fieldSize >= buttonCount && (i != 0 && !buttons[i].isEmptyCell))
-            //                return;
-            //            else if (!buttons[i].isEmptyCell)
-            //                indexes[currentIndex++] = buttons[i].index;
-            //            if (buttons[i].isEmptyCell)
-            //            {
-            //                GameButton temp = buttons[emptyButtonIndex];
-            //                for (int j = indexes.Length - 1; j >= 0; j--)
-            //                    if (indexes[j] >= 0)
-            //                    {
-            //                        buttons[indexes[j] + fieldSize] = buttons[indexes[j]];
-            //                        buttons[indexes[j] + fieldSize].index = indexes[j] + fieldSize;
-            //                        buttons[indexes[j]].Move(dir);
-            //                    }
-            //                if (indexes[0] >= 0)
-            //                    buttons[indexes[0]] = temp;
-            //                emptyButtonIndex = temp.index = indexes[0];
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    case SLIDE_DIRECTION.LEFT:
-            //        for (int i = button.index; i >= row * fieldSize; i--)
-            //        {
-            //            if ((i - 1 < 0 || i % fieldSize == 0) && (i != 0 && !buttons[i].isEmptyCell))
-            //                return;
-            //            else if (!buttons[i].isEmptyCell)
-            //                indexes[currentIndex++] = buttons[i].index;
-            //            if (buttons[i].isEmptyCell)
-            //            {
-            //                GameButton temp = buttons[emptyButtonIndex];
-            //                for (int j = indexes.Length - 1; j >= 0; j--)
-            //                    if (indexes[j] >= 0)
-            //                    {
-            //                        buttons[indexes[j] - 1] = buttons[indexes[j]];
-            //                        buttons[indexes[j] - 1].index = indexes[j] - 1;
-            //                        buttons[indexes[j]].Move(dir);
-            //                    }
-            //                if (indexes[0] >= 0)
-            //                    buttons[indexes[0]] = temp;
-            //                emptyButtonIndex = temp.index = indexes[0];
-            //                break;
-            //            }
-            //        }
-            //        break;
-            //    case SLIDE_DIRECTION.RIGHT:
-            //        for (int i = button.index; i <= ((row + 1) * fieldSize) - 1; i++)
-            //        {
-            //            if ((i + 1 > buttonCount || (i + 1) % fieldSize == 0) && (i != 0 && !buttons[i].isEmptyCell))
-            //                return;
-            //            else if (!buttons[i].isEmptyCell)
-            //                indexes[currentIndex++] = buttons[i].index;
-            //            if (buttons[i].isEmptyCell)
-            //            {
-            //                GameButton temp = buttons[emptyButtonIndex];
-            //                for (int j = indexes.Length - 1; j >= 0; j--)
-            //                    if (indexes[j] >= 0)
-            //                    {
-            //                        buttons[indexes[j] + 1] = buttons[indexes[j]];
-            //                        buttons[indexes[j] + 1].index = indexes[j] + 1;
-            //                        buttons[indexes[j]].Move(dir);
-            //                    }
-            //                if (indexes[0] >= 0)
-            //                    buttons[indexes[0]] = temp;
-            //                emptyButtonIndex = temp.index = indexes[0];
-            //                break;
-            //            }
-            //        }
-            //        break;
-        }
-        #endregion
-        Debug.Log(button.index);
-        Debug.Log(emptyButtonIndex);
         switch (dir)
         {
             case SLIDE_DIRECTION.TOP:
@@ -318,6 +216,8 @@ public class BoardManager : Singleton<BoardManager>
                                 emptyButtonIndex = indexes[0];
                                 temp.SetIndex(emptyButtonIndex);
                             }
+                            else
+                                buttons[i].Move(dir);
                             break;
                         }
                         else
@@ -340,6 +240,8 @@ public class BoardManager : Singleton<BoardManager>
                             emptyButtonIndex = indexes[0];
                             temp.SetIndex(emptyButtonIndex);
                         }
+                        else
+                            buttons[i].Move(dir);
                         break;
                     }
                 }
@@ -364,6 +266,8 @@ public class BoardManager : Singleton<BoardManager>
                                 emptyButtonIndex = indexes[0];
                                 temp.SetIndex(emptyButtonIndex);
                             }
+                            else
+                                buttons[i].Move(dir);
                             break;
                         }
                         else
@@ -386,6 +290,8 @@ public class BoardManager : Singleton<BoardManager>
                             emptyButtonIndex = indexes[0];
                             temp.SetIndex(emptyButtonIndex);
                         }
+                        else
+                            buttons[i].Move(dir);
                         break;
                     }
                 }
@@ -405,9 +311,13 @@ public class BoardManager : Singleton<BoardManager>
                                     buttons[indexes[j]].Move(dir);
                                 }
                             if (indexes[0] >= 0)
+                            {
                                 buttons[indexes[0]] = temp;
-                            emptyButtonIndex = indexes[0];
-                            temp.SetIndex(emptyButtonIndex);
+                                emptyButtonIndex = indexes[0];
+                                temp.SetIndex(emptyButtonIndex);
+                            }
+                            else
+                                buttons[i].Move(dir);
                             break;
                         }
                         else
@@ -425,9 +335,13 @@ public class BoardManager : Singleton<BoardManager>
                                 buttons[indexes[j]].Move(dir);
                             }
                         if (indexes[0] >= 0)
+                        {
                             buttons[indexes[0]] = temp;
-                        emptyButtonIndex = indexes[0];
-                        temp.SetIndex(emptyButtonIndex);
+                            emptyButtonIndex = indexes[0];
+                            temp.SetIndex(emptyButtonIndex);
+                        }
+                        else
+                            buttons[i].Move(dir);
                         break;
                     }
                 }
@@ -447,9 +361,13 @@ public class BoardManager : Singleton<BoardManager>
                                     buttons[indexes[j]].Move(dir);
                                 }
                             if (indexes[0] >= 0)
+                            {
                                 buttons[indexes[0]] = temp;
-                            emptyButtonIndex = indexes[0];
-                            temp.SetIndex(emptyButtonIndex);
+                                emptyButtonIndex = indexes[0];
+                                temp.SetIndex(emptyButtonIndex);
+                            }
+                            else
+                                buttons[i].Move(dir);
                             break;
                         }
                         else
@@ -467,9 +385,14 @@ public class BoardManager : Singleton<BoardManager>
                                 buttons[indexes[j]].Move(dir);
                             }
                         if (indexes[0] >= 0)
+                        {
                             buttons[indexes[0]] = temp;
-                        emptyButtonIndex = indexes[0];
-                        temp.SetIndex(emptyButtonIndex);
+                            emptyButtonIndex = indexes[0];
+                            temp.SetIndex(emptyButtonIndex);
+                            break;
+                        }
+                        else
+                            buttons[i].Move(dir);
                         break;
                     }
                 }
