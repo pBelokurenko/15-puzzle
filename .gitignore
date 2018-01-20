@@ -1,2 +1,5 @@
 *.meta
 .Library/
+ 
+.UnityPackageManager/ 
+ 
