@@ -5,19 +5,12 @@ public enum DIFFICULTY { EASY, NORAML, HARD }
 
 public class DifficultyManager : Singleton<DifficultyManager>
 {
-    public Text difficultyText;
     public Object buttonPrefab;
 
     public DIFFICULTY CurrentDifficulty {
         get
         {
             return currentDifficulty;
-        }
-        set
-        {
-            currentDifficulty = value;
-            if (onDifficultyChanges != null)
-                onDifficultyChanges();
         }
     }
     public Object CurrentPrefab { get; private set; }
@@ -28,74 +21,21 @@ public class DifficultyManager : Singleton<DifficultyManager>
     public string winCondition { get; private set; }
     DIFFICULTY currentDifficulty;
 
-    public event System.Action onDifficultyChanges;
+    public EngineEvent onDifficultyChanges;
 
     protected override void SingletonAwakened()
     {
-        CurrentDifficulty = PreferenceManager.Difficulty;
-        LanguageManager.Instance.onLanguageChanged += ChangeDifficultyLabel;
-        onDifficultyChanges += ChangeDifficultyLabel;
-        onDifficultyChanges += ChangeSettingsVariables;
+        onDifficultyChanges = new EngineEvent();
+        currentDifficulty = PreferenceManager.Difficulty;
+        onDifficultyChanges.AddAction(ChangeSettingsVariables);
         CurrentPrefab = buttonPrefab;
-        if (onDifficultyChanges != null)
-            onDifficultyChanges();
+        onDifficultyChanges.Execute();
     }
 
-    public void ChangeDifficultyLabel()
+    public void SetDifficulty(DIFFICULTY diff)
     {
-        switch (LanguageManager.Instance.Language)
-        {
-            case LANGUAGE.ENG:
-                switch (currentDifficulty)
-                {
-                    case DIFFICULTY.EASY:
-                        difficultyText.text = "Easy";
-                        break;
-                    case DIFFICULTY.NORAML:
-                        difficultyText.text = "Normal";
-                        break;
-                    case DIFFICULTY.HARD:
-                        difficultyText.text = "Hard";
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case LANGUAGE.RUS:
-                switch (currentDifficulty)
-                {
-                    case DIFFICULTY.EASY:
-                        difficultyText.text = "Легко";
-                        break;
-                    case DIFFICULTY.NORAML:
-                        difficultyText.text = "Нормально";
-                        break;
-                    case DIFFICULTY.HARD:
-                        difficultyText.text = "Тяжело";
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case LANGUAGE.UA:
-                switch (currentDifficulty)
-                {
-                    case DIFFICULTY.EASY:
-                        difficultyText.text = "Легко";
-                        break;
-                    case DIFFICULTY.NORAML:
-                        difficultyText.text = "Нормально";
-                        break;
-                    case DIFFICULTY.HARD:
-                        difficultyText.text = "Тяжко";
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
+        currentDifficulty = diff;
+        onDifficultyChanges.Execute();
     }
 
     public void ChangeSettingsVariables()

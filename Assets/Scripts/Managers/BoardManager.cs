@@ -44,7 +44,6 @@ public class BoardManager : Singleton<BoardManager>
     public GameButton[] buttons { get; private set; }
 
     FieldGenerator<GameButton> fg;
-    DIFFICULTY currentDiffculty, prevDifficulty;
     float scaleRate
     {
         get
@@ -58,15 +57,18 @@ public class BoardManager : Singleton<BoardManager>
     protected override void SingletonStarted()
     {
         buttons = new GameButton[25];
-        DifficultyManager.Instance.onDifficultyChanges += ChangeScale;
-        DifficultyManager.Instance.onDifficultyChanges += FillField;
-        prevDifficulty = currentDiffculty = DifficultyManager.Instance.CurrentDifficulty;
+        DifficultyManager.Instance.onDifficultyChanges.AddAction(()=>
+        {
+            if (UIScroller.Instance.currentPanel as GamePanel != null)
+                RefreshField();
+        });
     }
 
     public void InstantiateButtons()
     {
         if (!isInstantiated)
         {
+            isInstantiated = true;
             for (int i = 0; i < buttons.Length; i++)
             {
                 buttons[i] = Instantiate((GameObject)CurrentPrefab, gamePanel.transform).GetComponent<GameButton>();
@@ -80,13 +82,13 @@ public class BoardManager : Singleton<BoardManager>
         }
     }
 
-    public void FillField()
+    public void RefreshField()
     {
+        ChangeScale();
         #region
-        //when difficulty changes from hard to easy we need to hide spare buttons
-        if (DifficultyManager.Instance.CurrentDifficulty == DIFFICULTY.EASY)
-            for (int i = 0; i < buttons.Length; i++)
-                buttons[i].transform.position = new Vector3(15, 0, 0);
+        //when difficulty changes  we need to hide spare buttons
+        for (int i = 0; i < buttons.Length; i++)
+            buttons[i].transform.position = new Vector3(15, 0, 0);
 
         for (int i = 0; i < buttonCount; i++)
         {

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GamePanel : Panel
 {
-    void Start()
+    public override void Show(SLIDE_DIRECTION dir)
     {
-        BoardManager.Instance.FillField();
+        base.Show(dir);
+        BoardManager.Instance.RefreshField();
     }
 
     public override string ToString()

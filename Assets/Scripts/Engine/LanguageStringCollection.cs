@@ -18,22 +18,26 @@ public class LanguageStringsCollection : Dictionary<LANGUAGE, Dictionary<string,
         return new Dictionary<LANGUAGE, Dictionary<string, string>>()
         {
             { 
-                #region Eng 
                 LANGUAGE.ENG, new Dictionary<string, string>()
                 { 
                     #region Settings Menu 
                     { "SoundVolume", "Sound:" },
-                    { "MusicVolume", "Music:" }
+                    { "MusicVolume", "Music:" },
+                    #endregion
+                    #region
+                    { "RecordsLabel", "Records" },
                     #endregion
                 }
-                #endregion
             },
             {
                 LANGUAGE.RUS, new Dictionary<string, string>()
                 { 
                     #region Settings Menu 
                     { "SoundVolume", "Звуки:" },
-                    { "MusicVolume", "Музыка:" }
+                    { "MusicVolume", "Музыка:" },
+                    #endregion
+                    #region
+                    { "RecordsLabel", "Рекорды" },
                     #endregion
                 }
             },
@@ -42,7 +46,10 @@ public class LanguageStringsCollection : Dictionary<LANGUAGE, Dictionary<string,
                 { 
                     #region Settings Menu 
                     { "SoundVolume", "Звуки:" },
-                    { "MusicVolume", "Музика:" }
+                    { "MusicVolume", "Музика:" },
+                    #endregion
+                    #region
+                    { "RecordsLabel", "Рекорди" },
                     #endregion
                 }
             }

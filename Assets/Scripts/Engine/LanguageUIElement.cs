@@ -9,7 +9,7 @@ public class LanguageUIElement : MonoBehaviour
     void Start()
     {
         SetLanguage();
-        LanguageManager.Instance.onLanguageChanged += SetLanguage;
+        LanguageManager.Instance.onLanguageChanged.AddAction(SetLanguage);
     }
 
     public void SetLanguage()

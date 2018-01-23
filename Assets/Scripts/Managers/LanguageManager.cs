@@ -3,10 +3,11 @@
     LANGUAGE language = LANGUAGE.ENG;
     LanguageStringsCollection collection = null;
 
-    public event System.Action onLanguageChanged;
+    public EngineEvent onLanguageChanged;
 
     protected override void SingletonAwakened()
     {
+        onLanguageChanged = new EngineEvent();
         Load();
     }
 
@@ -24,8 +25,7 @@
         set
         {
             language = value;
-            if (onLanguageChanged != null)
-                onLanguageChanged();
+            onLanguageChanged.Execute();
         }
     }
 
